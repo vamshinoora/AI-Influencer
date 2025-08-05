@@ -1,0 +1,62 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "ai-influencer-automation"
+version = "0.1.0"
+description = "Automated AI influencer system for multi-platform content creation"
+authors = ["AI Influencer Team <team@ai-influencer.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+fastapi = "^0.104.0"
+uvicorn = "^0.24.0"
+pydantic = "^2.5.0"
+python-dotenv = "^1.0.0"
+openai = "^1.3.0"
+transformers = "^4.35.0"
+torch = "^2.1.0"
+diffusers = "^0.24.0"
+gtts = "^2.4.0"
+opencv-python = "^4.8.0"
+pillow = "^10.1.0"
+ffmpeg-python = "^0.2.0"
+moviepy = "^1.0.3"
+sqlalchemy = "^2.0.0"
+alembic = "^1.12.0"
+psycopg2-binary = "^2.9.0"
+redis = "^5.0.0"
+celery = "^5.3.0"
+instagrapi = "^2.0.0"
+tweepy = "^4.14.0"
+selenium = "^4.15.0"
+playwright = "^1.40.0"
+prometheus-client = "^0.19.0"
+gunicorn = "^21.2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+pytest-cov = "^4.1.0"
+black = "^23.11.0"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.7.0"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --cov=src --cov-report=html --cov-report=term-missing"
