@@ -3,7 +3,7 @@ import shutil
 from gtts import gTTS
 
 language = 'en'
-destination_dir = 'audio_files'
+destination_dir = os.path.join('src','ai_services','audio_files')
 output_filename = 'textToSpeech.mp3'
 
 
