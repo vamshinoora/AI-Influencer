@@ -1,22 +1,40 @@
+import asyncio
+import edge_tts
 import os
-import shutil
-from gtts import gTTS
 
-language = 'en'
-destination_dir = os.path.join('src','ai_services','audio_files')
-output_filename = 'textToSpeech.mp3'
+DIRECTORY = os.path.join('src','media','audio')
+OUTPUT = "textToSpeech.mp3"
+
+async def listEnglishVoices():
+    voices = await edge_tts.list_voices()
+    for voice in voices:
+        if voice["Locale"].startswith("en"):
+            print(f"{voice['ShortName']}")
 
 
-text = input('Provide the text to convert into MP3: ')
+async def synthesize(text,voice):
+    tts = edge_tts.Communicate(text=text,voice=voice)
+    await tts.save(os.path.join(DIRECTORY,OUTPUT))
 
-speech = gTTS(text=text, lang=language, slow=False, tld='com.au')
+def getVoice():
+    voice = input("Enter the voice name: ")
+    return voice
 
-speech.save(output_filename)
+def getText():
+    text = input("Enter the text to synthesize: ")
+    return text
 
-os.makedirs(destination_dir, exist_ok=True)
+async def selectEnglishVoice():
+    await listEnglishVoices()
+    voice = getVoice()
+    return voice
+    
 
-destination_path = os.path.join(destination_dir, output_filename)
+async def main():
+    voice = await selectEnglishVoice()
+    text = getText()
+    await synthesize(text,voice)
 
-shutil.move(output_filename, destination_path)
 
-print(f"File saved to: {destination_path}")
+if __name__ == "__main__":
+    asyncio.run(main())
