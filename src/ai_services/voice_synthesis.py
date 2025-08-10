@@ -8,17 +8,10 @@ async def listEnglishVoices():
     try: 
         voices = await edge_tts.list_voices()
         for voice in voices:
-            if voice["Locale"].startswith("te-IN"):
+            if voice["Locale"].startswith("en-US"):
                 print(f"{voice['ShortName']}")
     except Exception as e:
         print(f"Error listing voices: {e}")
-
-async def synthesize(text,voice):
-    try:
-        tts = edge_tts.Communicate(text=text,voice=voice)
-        await tts.save(os.path.join(DIRECTORY,OUTPUT))
-    except Exception as e:
-        print(f"Error synthesizing text: {e}")
 
 async def validateVoice(voice):
     try:
@@ -42,13 +35,31 @@ async def getVoice():
         print(f"Error getting voice: {e}")
         return None
 
-def getText():
+def getVoiceSpeed():
     try:
-        text = input("Enter the text to synthesize: ")
-        return text
+        speed = input("Enter voice speed (e.g., +10%, -20%, 0%): ").strip()
+        if not speed:
+            return "0%" 
+        if not speed.endswith("%"):
+            print(f"ERROR: Speed must be in the format +10% or -10%. Using default 0%.")
+            return "0%"
+        return speed
     except Exception as e:
-        print(f"Error getting text: {e}")
-        return None
+     print(f"ERROR: Failed to get voice speed: {e}")
+    return "0%"
+
+def getPitch():
+    try:
+        pitch = input("Enter voice pitch (e.g., +2Hz, 0Hz, -2Hz): ").strip()
+        if not pitch:
+            return "0Hz" 
+        if not pitch.endswith("Hz"):
+            print(f"ERROR: Pitch must be in the format +2Hz or -2Hz. Using default 0Hz.")
+            return "0Hz"
+        return pitch
+    except Exception as e:
+        print(f"ERROR: Failed to get voice pitch: {e}")
+    return "0Hz"
 
 async def selectEnglishVoice():
     try:
@@ -59,12 +70,27 @@ async def selectEnglishVoice():
         print(f"Error selecting voice: {e}")
         return None
     
+def getText():
+    try:
+        text = input("Enter the text to synthesize: ")
+        return text
+    except Exception as e:
+        print(f"Error getting text: {e}")
+
+async def synthesize(text,voice,speed,pitch):
+    try:
+        tts = edge_tts.Communicate(text=text,voice=voice, rate=speed, pitch=pitch)
+        await tts.save(os.path.join(DIRECTORY,OUTPUT))
+    except Exception as e:
+        print(f"Error synthesizing text: {e}")
 
 async def main():
     try:
         voice = await selectEnglishVoice()
+        speed = getVoiceSpeed()
+        pitch = getPitch()
         text = getText()
-        await synthesize(text,voice)
+        await synthesize(text,voice,speed,pitch)
     except Exception as e:
         print(f"Error in main function: {e}")
 
