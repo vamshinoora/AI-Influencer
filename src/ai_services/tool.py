@@ -72,7 +72,7 @@ resp = client.chat.completions.create(
     )
 character=resp.choices[0].message.content.strip().lower()
 
-print(character)
+
 
 character = json.loads(character)
 
@@ -86,5 +86,5 @@ character['voice'] = matches[0]
 if not character['voice']:
     character['voice'] = "en-US-JennyNeural"
     
-print(character)
+
 
