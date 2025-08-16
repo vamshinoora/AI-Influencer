@@ -35,6 +35,10 @@ class ComfyUIClient:
             print("💡 Make sure ComfyUI is running on localhost:8188")
             return False
 
+    def check_connection(self) -> bool:
+        """Check if ComfyUI server is running (alias for check_server)"""
+        return self.check_server()
+
     def queue_prompt(self, prompt: Dict[str, Any]) -> Dict[str, Any]:
         """Queue a prompt for processing"""
         payload = {"prompt": prompt, "client_id": self.client_id}
@@ -154,10 +158,10 @@ class ComfyUIClient:
         
         # Default workflow path
         if workflow_path is None:
-            workflow_path = os.path.join(
-                os.path.dirname(os.path.dirname(os.path.dirname(__file__))), 
-                "basicImageGenerator.json"
-            )
+            # Get the project root directory more reliably
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            project_root = os.path.dirname(os.path.dirname(current_dir))
+            workflow_path = os.path.join(project_root, "src", "ai_services", "workflows", "basicImageGenerator.json")
         
         # Default negative prompt
         if negative_prompt is None:
@@ -170,6 +174,9 @@ class ComfyUIClient:
         try:
             # Load workflow
             print(f"📂 Loading workflow from: {workflow_path}")
+            print(f"📂 File exists: {os.path.exists(workflow_path)}")
+            if not os.path.exists(workflow_path):
+                raise FileNotFoundError(f"Workflow file not found: {workflow_path}")
             prompt = self.load_workflow(workflow_path)
             
             # Set prompts and parameters

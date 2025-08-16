@@ -155,3 +155,23 @@ credentials/
 generated_content/
 output/
 temp/
+
+# Streamlit
+.streamlit/
+
+# ComfyUI outputs
+comfyui_*/
+*.safetensors
+
+# Test files
+test_*.py
+*_test.py
+demo_*.py
+
+# Database files
+*.db
+*.sqlite
+
+# Log files
+*.log
+logs/
